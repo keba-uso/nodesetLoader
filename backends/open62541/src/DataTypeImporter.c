@@ -229,7 +229,7 @@ static void setPaddingMemsize(UA_DataType *type,
             {
                 tm->padding = (UA_Byte)sizeof(UA_UInt32);
             }
-            else
+            else if (memberType->typeKind != UA_DATATYPEKIND_UNION)
             {
                 int align = getAlignment(memberType, customTypes);
 #ifdef USE_MEMBERTYPE_INDEX
@@ -557,9 +557,6 @@ static void calcMemSize(DataTypeImporter *importer)
         {
             // we can calculate the memsize if the memsize of all membertypes is
             // known
-#ifdef ENABLE_BACKEND_OPEN62541
-            setPaddingMemsize(type, importer->types);
-#else
             if (readyForMemsizeCalc(type, importer->types->types))
             {
                 setPaddingMemsize(type, importer->types);
@@ -568,7 +565,6 @@ static void calcMemSize(DataTypeImporter *importer)
             {
                 allTypesFinished = false;
             }
-#endif
         }
     }
 }
